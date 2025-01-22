@@ -1,0 +1,46 @@
+# R specific
+*.Rhistory
+*.RData
+*.Rproj.user
+.Rproj.user/
+
+# LaTeX specific
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# R Markdown and knitr
+*.knit.md
+*.utf8.md
+*.md
+
+# Output files
+output/
+!output/clean_suicide_data_with_rate.csv
+!output/summary_statistics.csv
+
+# Logs and temporary files
+*.pdf
+*.png
+*.tmp
+*.bak
+
+# renv package cache
+renv/library/
+renv/staging/
+
+# macOS specific
+.DS_Store
+
+# Python and IDE files (if applicable)
+*.pyc
+__pycache__/
+.idea/
+.vscode/
+
+Data/
+renv/
+renv.lock
+.Rprofile

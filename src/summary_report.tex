@@ -1,0 +1,112 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Suicide Data Analysis Summary},
+  pdfauthor={Your Name},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Suicide Data Analysis Summary}
+\author{Your Name}
+\date{January 22, 2025}
+
+\begin{document}
+\maketitle
+
+library(dplyr) library(ggplot2) library(gridExtra) if
+(!dir.exists(``output'')) \{ dir.create(``output'') \} clean\_data
+\textless- read.csv(``output/clean\_suicide\_data\_with\_rate.csv'')
+data\_dims \textless- dim(clean\_data) countries \textless-
+unique(clean\_data\(country)
+years <- unique(clean_data\)year) num\_countries \textless-
+length(countries) num\_years \textless- length(years) cat(``===== BASIC
+SUMMARY =====\n'') cat(``Data dimensions:'', data\_dims{[}1{]}, ``rows
+x'', data\_dims{[}2{]}, ``columns\n'') cat(``Number of Countries:'',
+num\_countries, ``\n'') cat(``Countries in dataset:'', paste(countries,
+collapse=``,''), ``\n'') cat(``Years in dataset:'', paste(years,
+collapse=``,''), ``\n'') cat(``\n--- Summary of
+suicides\_per\_100k\_calc ---\n'')
+print(summary(clean\_data\(suicides_per_100k_calc))
+cat("\n--- Summary of GDP per capita ---\n")
+print(summary(clean_data\)gdp\_per\_capita)) cat(``\n===== KEY FINDINGS
+=====\n'') cat(``1) From the correlation analysis between GDP per capita
+and suicide rates:\n'') cat('' - Interpret correlation based on the
+coefficient and p-value.\n``) cat('' - If p-value \textless{} 0.05,
+correlation is statistically significant.\n\n``) cat(''2) From the
+t-test analysis between male and female suicide rates:\n``) cat('' - If
+p-value \textless{} 0.05, the difference in mean suicide rate by gender
+is significant.\n``) p1 \textless- ggplot(clean\_data, aes(x =
+suicides\_per\_100k\_calc)) + geom\_histogram(binwidth = 2, fill
+=''steelblue'', color = ``black'') + theme\_minimal() + labs( title =
+``Distribution of Suicide Rates (per 100k)'', x = ``Suicides per 100k'',
+y = ``Count'' ) p2 \textless- ggplot(clean\_data, aes(x = sex, y =
+suicides\_per\_100k\_calc, fill = sex)) +
+geom\_boxplot(outlier.color=``red'', alpha=0.6) + theme\_minimal() +
+labs( title = ``Suicide Rates by Gender'', x = ``Gender'', y =
+``Suicides per 100k'' ) + theme(legend.position=``none'')
+grid.arrange(p1, p2, ncol=2)
+ggsave(``output/suicide\_rate\_distribution.png'', plot=p1, width=8,
+height=6) ggsave(``output/suicide\_rate\_by\_gender.png'', plot=p2,
+width=8, height=6) cat(``\n===== END OF SUMMARY =====\n'')
+message(``Summary report complete. See console output and saved plots in
+`output' directory.'')
+
+\end{document}

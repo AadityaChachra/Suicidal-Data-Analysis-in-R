@@ -1,0 +1,189 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+\hypersetup{
+  colorlinks = true,
+  urlcolor   = blue,
+  linkcolor  = black,
+  citecolor  = black
+}
+
+\titleformat{\section}[block]{\bfseries\Large\filcenter}{}{1em}{}
+\titleformat{\subsection}[block]{\bfseries\large}{}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{Suicide Data Analysis Report}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\onehalfspacing
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\Huge \textbf{Suicide Data Analysis Report}}\\[2em]
+  {\large \textbf{Computing Tools Workshop}}\\[0.5em]
+  {\large \textbf{Mathematics and Computing}}\\[3em]
+  {\large \textbf{Aman Kumar}}\\[0.3em]
+  {\large \textbf{Roll No: 2022UCM2386}}\\
+  \vfill
+  \textbf{\today}
+  \vspace*{2cm}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+This report documents an end-to-end analysis of a suicide dataset. The main objectives include:
+\begin{enumerate}
+  \item Loading and cleaning the dataset (handling missing values and duplicates).
+  \item Generating summary statistics grouped by country, year, gender, and age.
+  \item Creating a new column for suicides per 100,000 population.
+  \item Visualizing total suicides over time for the top five countries with the highest suicide rates.
+  \item Generating heatmaps to display suicide rates by country and age group.
+  \item Performing a correlation analysis between GDP per capita and suicide rates.
+  \item Conducting a T-test to identify whether there's a significant difference in suicide rates between males and females.
+  \item Presenting conclusions and key findings with visual evidence.
+\end{enumerate}
+
+\section{Data Explanation}
+The primary dataset is stored at \texttt{Data/master.csv}. After extensive cleaning—removing duplicates, filtering out rows with missing suicides or population data, and converting data types—an intermediate cleaned dataset (\texttt{Data/clean\_suicide\_data.csv}) was produced. We then added a new column (\texttt{suicides\_per\_100k\_calc}) to represent the suicide count per 100,000 population, culminating in a final dataset saved as \texttt{clean\_suicide\_data\_with\_rate.csv} in the \texttt{output} directory.
+
+\subsection{Cleaning Steps}
+\begin{itemize}
+  \item \textbf{Missing Values:} Rows with \texttt{NA} in critical columns (e.g., suicides, population) were removed.
+  \item \textbf{Duplicates:} Identical rows were dropped to ensure uniqueness.
+  \item \textbf{Type Conversion:} Columns like \texttt{year}, \texttt{suicides\_no}, and \texttt{population} were converted to numeric or integer formats.
+  \item \textbf{GDP Fields:} \texttt{gdp\_for\_year} and \texttt{gdp\_per\_capita} were cleaned by removing special characters and converting them to numeric.
+\end{itemize}
+
+\section{Summary Statistics}
+For each country, year, gender, and age group, we computed:
+\begin{itemize}
+  \item \textbf{Total Suicides:} Sum of \texttt{suicides\_no}.
+  \item \textbf{Average Suicide Rate:} Mean of \texttt{suicides\_per\_100k\_calc}.
+  \item \textbf{Average Population:} Mean of \texttt{population}.
+\end{itemize}
+These summaries allowed us to compare suicide tendencies across different demographics.
+
+\section{Suicides per 100k Population}
+A new column \texttt{suicides\_per\_100k\_calc} was created:
+\[
+\text{suicides\_per\_100k\_calc} = \frac{\text{suicides\_no}}{\text{population}} \times 100000
+\]
+This metric normalizes suicide counts relative to population sizes, enabling more equitable comparisons across countries and years.
+
+\section{Visualization and Results}
+
+\subsection{Top 5 Countries by Suicide Rate}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{output/top5_countries_suicides_over_time.png}
+  \caption{Total Suicides Over Time for the Top 5 Countries}
+  \label{fig:top5}
+\end{figure}
+
+Figure~\ref{fig:top5} shows the total suicides by year for countries with the highest average suicide rates. Notably, some countries show consistently high totals, pointing to long-term societal or economic factors.
+
+\subsection{Heatmaps by Age Group and Country}
+To visualize how age groups differ among countries, we generated multiple heatmaps. Below are examples of different group subsets from the dataset:
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{output/heatmap_group_1.png}
+    \caption{Heatmap Group 1}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{output/heatmap_group_8.png}
+    \caption{Heatmap Group 8}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{output/heatmap_group_22.png}
+    \caption{Heatmap Group 22}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{output/heatmap_group_30.png}
+    \caption{Heatmap Group 30}
+  \end{subfigure}
+  \caption{Age-Group-Based Heatmaps for Various Country Subsets}
+  \label{fig:heatmaps}
+\end{figure}
+
+These heatmaps highlight variations in suicide rates across age brackets, indicating that certain age groups are at higher risk in specific countries.
+
+\subsection{Correlation: GDP Per Capita vs. Suicide Rates}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.65\textwidth]{output/gdp_vs_suicide_rate.png}
+  \caption{Correlation Between GDP Per Capita and Suicide Rates}
+  \label{fig:gdp_corr}
+\end{figure}
+
+Figure~\ref{fig:gdp_corr} shows a scatter plot with a fitted regression line. The correlation test indicated whether higher GDP per capita correlates positively or negatively with suicide rates. A significant p-value ($p < 0.05$) suggests a statistically meaningful relationship.
+
+\subsection{T-Test Analysis: Gender Differences}
+A two-sample T-test was performed:
+\[
+H_0: \mu_{\text{male}} = \mu_{\text{female}}, \quad
+H_1: \mu_{\text{male}} \neq \mu_{\text{female}}
+\]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.65\textwidth]{output/TTest.png}
+  \caption{Console Output of the T-Test Results}
+  \label{fig:t_console}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.55\textwidth]{output/t_test_gender_boxplot.png}
+  \caption{Boxplot of Suicide Rates by Gender}
+  \label{fig:t_boxplot}
+\end{figure}
+
+If the p-value is below 0.05, there's a statistically significant difference in the mean suicide rate between males and females, as depicted in Figure~\ref{fig:t_boxplot}.
+
+\subsection{Additional Distributions}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.65\textwidth]{output/suicide_rate_distribution.png}
+  \caption{Distribution of Suicide Rates (per 100k)}
+  \label{fig:dist_suicides}
+\end{figure}
+
+Figure~\ref{fig:dist_suicides} shows the overall distribution of suicides per 100k. This histogram helps identify common ranges and extreme values.
+
+\section{Interpretation and Conclusions}
+\begin{itemize}
+  \item \textbf{High-Risk Groups:} Heatmaps revealed certain age groups with elevated suicide rates, suggesting potential targeted prevention strategies.
+  \item \textbf{GDP Correlation:} Economically prosperous nations may still suffer from significant mental health crises, though the direction and strength of correlation vary.
+  \item \textbf{Gender Differences:} T-test results showed whether males or females are more at risk in certain contexts.
+  \item \textbf{Policy Implications:} Findings can guide resource allocation for mental health programs across different demographic segments and economic statuses.
+\end{itemize}
+
+\section*{Author}
+\textbf{Aman Kumar} \\
+\textbf{Roll Number:} 2022UCM2386 \\
+\textbf{Branch:} Mathematics and Computing \\
+\textbf{Subject:} Computing Tools Workshop
+
+\end{document}
